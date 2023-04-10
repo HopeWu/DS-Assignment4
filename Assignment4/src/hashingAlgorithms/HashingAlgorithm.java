@@ -6,5 +6,5 @@ public interface HashingAlgorithm {
 	 * @param transactionId
 	 * @return
 	 */
-	int hash(String transactionId);
+	public long hash(String transactionId);
 }

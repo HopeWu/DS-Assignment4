@@ -53,7 +53,7 @@ public abstract class HashTable {
 	 * @return
 	 */
 	public int hash(String transactionId){
-		return hashingAlgorithm.hash(transactionId) % this.length;
+		return (int) hashingAlgorithm.hash(transactionId) % this.length;
 	}
 
 }
