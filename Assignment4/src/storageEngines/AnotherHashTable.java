@@ -1,8 +1,17 @@
 package storageEngines;
 
 import dataset.Transaction;
+import hashingAlgorithms.CRC64;
+import hashingAlgorithms.HashingAlgorithm;
 
 public class AnotherHashTable extends HashTable {
+	public AnotherHashTable(){
+		super.hashingAlgorithm = new CRC64();
+	}
+	
+	public AnotherHashTable(HashingAlgorithm hashingAlgorithm){
+		super.hashingAlgorithm = hashingAlgorithm;
+	}
 
 	@Override
 	protected Transaction retrieveFromBucket(int bucketIndex) {
@@ -21,5 +30,5 @@ public class AnotherHashTable extends HashTable {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 }

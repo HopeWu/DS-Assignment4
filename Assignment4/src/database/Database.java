@@ -1,6 +1,7 @@
 package database;
 
 import dataset.Transaction;
+import storageEngines.ClassicHashTable;
 import storageEngines.HashTable;
 
 /**
@@ -11,7 +12,17 @@ import storageEngines.HashTable;
  */
 public class Database {
 	private HashTable hashTable = null;
-
+	
+	public Database(HashTable hashTable) {
+		super();
+		this.hashTable = hashTable;
+	}
+	
+	public Database() {
+		super();
+		this.hashTable = new ClassicHashTable();
+	}
+	
 	/**
 	 * To save a bunch of transactions into the database.
 	 * @param transactions
@@ -29,15 +40,13 @@ public class Database {
 	public void save(Transaction transaction) {
 		this.hashTable.put(transaction.getTransactionId(), transaction);
 	}
-
+	
 	/**
 	 * To lookup a transaction by its transaction id. It uses hashing table to achieve fast lookup, O(1) time.
 	 * @param string
 	 * @return
 	 */
 	public Transaction lookup(String string) {
-		// TODO Auto-generated method stub
 		return this.hashTable.get(string);
 	}
-
 }

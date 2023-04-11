@@ -1,5 +1,7 @@
 package storageEngines;
 import dataset.Transaction;
+import hashingAlgorithms.CRC64;
+import hashingAlgorithms.HashingAlgorithm;
 
 
 
@@ -9,6 +11,14 @@ import dataset.Transaction;
  *
  */
 public class ClassicHashTable extends HashTable{
+	public ClassicHashTable(){
+		super.hashingAlgorithm = new CRC64();
+	}
+	
+	public ClassicHashTable(HashingAlgorithm hashingAlgorithm){
+		super.hashingAlgorithm = hashingAlgorithm;
+	}
+	
 	// other instance variable if needed
 	
 	@Override
