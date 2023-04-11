@@ -27,7 +27,7 @@ public class Database {
 	 * @param transaction
 	 */
 	public void save(Transaction transaction) {
-		this.hashTable.put(transaction.getId(), transaction);
+		this.hashTable.put(transaction.getTransactionId(), transaction);
 	}
 
 	/**
