@@ -22,10 +22,11 @@ public class OpenAddressHashTableByDoubleHashing extends HashTable{
      * 
      * @param hashingAlgorithm The algorithm used for hashing the transaction id into the index of the array.
      */
-    public OpenAddressHashTableByDoubleHashing(HashingAlgorithm hashingAlgorithm) {
+    public OpenAddressHashTableByDoubleHashing(HashingAlgorithm hashingAlgorithm,HashingAlgorithm hashingAlgorithm2) {
         super();
         this.length = INITIAL_CAPACITY;
         this.hashingAlgorithm = hashingAlgorithm;
+        this.hashingAlgorithm2 = hashingAlgorithm2;
         this.table = new Transaction[INITIAL_CAPACITY];
     }
 
