@@ -10,7 +10,7 @@ import hashingAlgorithms.HashingAlgorithm;
 public class OpenAddressHashTableByLinearProbing extends HashTable {
 
     private static final int DEFAULT_LENGTH = 16;
-    private static final float LOAD_FACTOR = 0.75f;
+    private static float LOAD_FACTOR = 0.75f;
 
     private Transaction[] table;
     private int size;
@@ -28,11 +28,12 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
      * Constructor for OpenAddressHashTable.
      * @param hashingAlgorithm the hashing algorithm to use for converting transaction IDs into bucket indices
      */
-    public OpenAddressHashTableByLinearProbing(HashingAlgorithm hashingAlgorithm) {
+    public OpenAddressHashTableByLinearProbing(HashingAlgorithm hashingAlgorithm,float factor) {
         this.length = DEFAULT_LENGTH;
         super.hashingAlgorithm = hashingAlgorithm;
         this.table = new Transaction[length];
         this.size = 0;
+        OpenAddressHashTableByLinearProbing.LOAD_FACTOR=factor;
     }
 
     /**
