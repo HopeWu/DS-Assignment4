@@ -1,5 +1,5 @@
 package storageEngines;
-import dataset.Dataset;
+
 import dataset.Transaction;
 import hashingAlgorithms.CRC64;
 import hashingAlgorithms.HashingAlgorithm;
@@ -9,14 +9,21 @@ import hashingAlgorithms.HashingAlgorithm;
  * @author Prateek Dash
  *
  */
-public class ClassicHashTable extends HashTable{
+public class ClassicHashTable extends HashTable {
+	
+	/**
+	 * Default Constructor: Initializes the member variables
+	 * of super class and the current class.
+	 * 
+	 */
 	public ClassicHashTable(){
 		super.hashingAlgorithm = new CRC64();
 		this.length = DEFAULT_LENGTH;
-		this.chainedArray = new SingleTaskNode[length];
+		chainedArray = new TransactionNode[length];
 		for(int i = 0; i < length; i++) {
 			chainedArray[i] = null;
 		}
+		size = 0;
 	}
 	
 	/**
@@ -38,6 +45,8 @@ public class ClassicHashTable extends HashTable{
 
 	/**
 	 * Retrieve the transaction from the bucket of bucketIndex.
+	 * @param bucketIndex - the index of the bucket computed by
+	 *  	  the hash function.
 	 */
 	@Override
 	protected Transaction retrieveFromBucket(int bucketIndex) {
@@ -45,7 +54,7 @@ public class ClassicHashTable extends HashTable{
 			return null;
 		}
 		else {
-			SingleTaskNode list = chainedArray[bucketIndex];
+			TransactionNode list = chainedArray[bucketIndex];
 			while(list.getNext() != null) {
 				if(list.getData() == null) {
 					return null;
@@ -57,18 +66,24 @@ public class ClassicHashTable extends HashTable{
 		}
 	}
 
-
 	/**
-	 * Put the transaction into the bucket of bucketIndex.
+	 * Puts the transaction into the bucket of bucketIndex by adding the
+	 * instance of TransactionNode containing Transaction data in the 
+	 * array index determined by the hash function. If the node already
+	 * exists, then it creates a new node and 'chains' it to the existing
+	 * node.
+	 * 
+	 * @param bucketIndex - Index of bucket as determined by hash function.
+	 * @param tran - Transaction data to be added into the bucket.
 	 */
 	@Override
 	protected void putIntoBucket(int bucketIndex, Transaction tran) {
 		if(chainedArray[bucketIndex] == null) {
-			SingleTaskNode newNode = new SingleTaskNode(tran, null);
+			TransactionNode newNode = new TransactionNode(tran, null);
 			chainedArray[bucketIndex] = newNode;
 		}
 		else {
-			SingleTaskNode list = chainedArray[bucketIndex];
+			TransactionNode list = chainedArray[bucketIndex];
 			boolean found = false;
 			while(list.getNext() != null) {
 				if(list.getData() == tran) {
@@ -81,14 +96,14 @@ public class ClassicHashTable extends HashTable{
 			}
 			
 			if(!found) {
-				SingleTaskNode newNode = new SingleTaskNode(tran, null);
+				TransactionNode newNode = new TransactionNode(tran, null);
 				list.setNext(newNode);
 			}
 		}
 		++size;
 	}
 	
-	private SingleTaskNode chainedArray[];
+	private TransactionNode[] chainedArray;
 	private int size;
     private static final int DEFAULT_LENGTH = 16;
 }
