@@ -19,22 +19,16 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
 		this.table = new Transaction[INITIAL_CAPACITY];
 	}
 	
-	public OpenAddressHashTableByQuadraticProbing(float factor){
-		super.hashingAlgorithm = new CRC64();
-		this.length = INITIAL_CAPACITY;
-		this.table = new Transaction[INITIAL_CAPACITY];
-        OpenAddressHashTableByQuadraticProbing.LOAD_FACTOR=factor;
-	}
-	
     /**
      * Constructor for the QuadraticProbingHashTable.
      * @param hashingAlgorithm The algorithm used for hashing the transaction id into the index of the array.
      */
-    public OpenAddressHashTableByQuadraticProbing(HashingAlgorithm hashingAlgorithm) {
+    public OpenAddressHashTableByQuadraticProbing(HashingAlgorithm hashingAlgorithm, float factor) {
         super();
         this.length = INITIAL_CAPACITY;
         this.hashingAlgorithm = hashingAlgorithm;
         this.table = new Transaction[INITIAL_CAPACITY];
+        OpenAddressHashTableByQuadraticProbing.LOAD_FACTOR=factor;
     }
 
     /**
