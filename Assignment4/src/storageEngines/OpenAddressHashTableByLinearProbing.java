@@ -23,17 +23,24 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
         this.size = 0;
 	}
 	
+	public OpenAddressHashTableByLinearProbing(float factor){
+		super.hashingAlgorithm = new CRC64();
+		this.length = DEFAULT_LENGTH;
+        this.table = new Transaction[length];
+        this.size = 0;
+        OpenAddressHashTableByLinearProbing.LOAD_FACTOR=factor;
+	}
 	
     /**
      * Constructor for OpenAddressHashTable.
      * @param hashingAlgorithm the hashing algorithm to use for converting transaction IDs into bucket indices
      */
-    public OpenAddressHashTableByLinearProbing(HashingAlgorithm hashingAlgorithm,float factor) {
+    public OpenAddressHashTableByLinearProbing(HashingAlgorithm hashingAlgorithm) {
         this.length = DEFAULT_LENGTH;
         super.hashingAlgorithm = hashingAlgorithm;
         this.table = new Transaction[length];
         this.size = 0;
-        OpenAddressHashTableByLinearProbing.LOAD_FACTOR=factor;
+
     }
 
     /**
