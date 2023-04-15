@@ -19,16 +19,14 @@ public class ClassicHashExperiment {
 	public static void main(String[] args) {
 		int datasize = 10;
 		
-		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm());
-		classicHashTableHalfSize.setBucketLength(datasize/2);
+		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize/2);
 		
-		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-		classicHashTableFull.setBucketLength(datasize);
+		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
 		
-		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-		classicHashTableDoubleFull.setBucketLength(2*datasize);
-		
+		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
+
 		Transaction[] data = Dataset.generate(datasize);
+		
 		
 		Database dbHalf = new Database(classicHashTableHalfSize);
 		Database dbFull = new Database(classicHashTableFull);
@@ -38,16 +36,19 @@ public class ClassicHashExperiment {
 		dbFull.save(data);
 		dbDouble.save(data);
 
+
 		long start, end;
 		
 		Random ran = new Random();
 		
 		start = System.currentTimeMillis();
+
 		for ( int i = 0; i < datasize/10; ++i) {
 			int index = ran.nextInt(datasize);
 			dbHalf.lookup(data[index].getTransactionId());
 		}
 		dbHalf.lookup(data[0].getTransactionId());
+
 		end = System.currentTimeMillis();
 		System.out.println(end-start);
 	}
