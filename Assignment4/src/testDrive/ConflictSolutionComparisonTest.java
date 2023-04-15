@@ -1,8 +1,5 @@
 package testDrive;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 
 import dataset.Dataset;
 import dataset.Transaction;
@@ -23,8 +20,9 @@ public class ConflictSolutionComparisonTest {
     //    private static final Transaction[] data = readTransactionsFromFile("transactions.dat");
 
     /**
-     * This test class compares the performance of OpenAddressHashTable and
-     * QuadraticProbingHashTable with different load factors.
+     * Compares the performance of OpenAddressHashTableByLinearProbing and OpenAddressHashTableByQuadraticProbing
+     * with different load factors.
+     * @param hash the hashing algorithm to be used in the hash tables
      */
     public static void LoadFactorComparison(HashingAlgorithm hash) {
         
@@ -74,8 +72,9 @@ public class ConflictSolutionComparisonTest {
     }
     
     /**
-     * This test class compares the performance of OpenAddressHashTable and
-     * QuadraticProbingHashTable with different data sizes.
+     * Compares the performance of OpenAddressHashTableByLinearProbing and OpenAddressHashTableByQuadraticProbing
+     * with different data sizes.
+     * @param hash the hashing algorithm to be used in the hash tables
      */
     public static void DataSizeComparison(HashingAlgorithm hash) {
     	// Instantiate a custom hashing algorithm, e.g., CRC32
@@ -121,6 +120,10 @@ public class ConflictSolutionComparisonTest {
         }
     }
     
+    /**
+     * Compares the performance of OpenAddressHashTableByQuadraticProbing and ClassicHashTable.
+     * @param hash the hashing algorithm to be used in the hash tables
+     */
     public static void QuadraticProbingVsSeparateChaining(HashingAlgorithm hash) {
         // Instantiate a custom hashing algorithm, e.g., CRC32
         HashingAlgorithm hashingAlgorithm = hash;
@@ -150,7 +153,13 @@ public class ConflictSolutionComparisonTest {
             }
      }
 
-
+    /**
+     * Measures the time taken to insert elements into the given hash table.
+     * @param hashTable   the hash table to be tested
+     * @param transactions the data to be inserted
+     * @param dataSize     the number of elements to be inserted
+     * @return the time taken for insertion in milliseconds
+     */
     private static long testInsertion(HashTable hashTable, Transaction[] transactions, int dataSize) {
         long startTime = System.nanoTime();
 
@@ -161,6 +170,14 @@ public class ConflictSolutionComparisonTest {
         return (System.nanoTime() - startTime) / 1_000_000; // Convert to milliseconds
     }
 
+    /**
+     * Measures the time taken to search for elements in the given hash table.
+     *
+     * @param hashTable   the hash table to be tested
+     * @param transactions the data to be searched
+     * @param dataSize     the number of elements to be searched
+     * @return the time taken for searching in milliseconds
+     */
     private static long testSearch(HashTable hashTable, Transaction[] transactions, int dataSize) {
         long startTime = System.nanoTime();
 
@@ -178,6 +195,8 @@ public class ConflictSolutionComparisonTest {
 		HashingAlgorithm hashingAlgorithm = new CRC64();
         // LoadFactorComparison(hashingAlgorithm);
         // DataSizeComparison(hashingAlgorithm);
+		LoadFactorComparison(hashingAlgorithm);
+		DataSizeComparison(hashingAlgorithm);
         QuadraticProbingVsSeparateChaining(hashingAlgorithm);
 	}
 }
