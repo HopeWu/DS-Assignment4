@@ -17,24 +17,27 @@ import storageEngines.HashTable;
  */
 public class ClassicHashExperiment {
 	public static void main(String[] args) {
-		int datasize = 10;
+		int datasize = 100;
 		
+		System.out.println(System.currentTimeMillis());
 		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize/2);
 		
-		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
-		
-		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
+//		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
+//		
+//		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
 
 		Transaction[] data = Dataset.generate(datasize);
+		System.out.println(System.currentTimeMillis());
 		
 		
 		Database dbHalf = new Database(classicHashTableHalfSize);
-		Database dbFull = new Database(classicHashTableFull);
-		Database dbDouble = new Database(classicHashTableDoubleFull);
+		System.out.println(System.currentTimeMillis());
+//		Database dbFull = new Database(classicHashTableFull);
+//		Database dbDouble = new Database(classicHashTableDoubleFull);
 		
 		dbHalf.save(data);
-		dbFull.save(data);
-		dbDouble.save(data);
+//		dbFull.save(data);
+//		dbDouble.save(data);
 
 
 		long start, end;
@@ -42,14 +45,16 @@ public class ClassicHashExperiment {
 		Random ran = new Random();
 		
 		start = System.currentTimeMillis();
+		System.out.println(start);
 
-		for ( int i = 0; i < datasize/10; ++i) {
+		for ( int i = 0; i < datasize; ++i) {
 			int index = ran.nextInt(datasize);
-			dbHalf.lookup(data[index].getTransactionId());
+			System.out.println(dbHalf.lookup(data[index].getTransactionId()));;
 		}
 		dbHalf.lookup(data[0].getTransactionId());
 
 		end = System.currentTimeMillis();
+		System.out.println(end);
 		System.out.println(end-start);
 	}
 	
