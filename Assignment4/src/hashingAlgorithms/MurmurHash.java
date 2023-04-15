@@ -2,13 +2,10 @@ package hashingAlgorithms;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * 
- * @author Yan
  * A class implementing the MurMurHash function with low collision rate 
  * 
  */
@@ -21,43 +18,44 @@ public class MurmurHash implements HashingAlgorithm {
      */
     private long hash(byte[] key) {
 
-        ByteBuffer buffer = ByteBuffer.wrap(key);
+        ByteBuffer bytebuffer = ByteBuffer.wrap(key);
+        // random seed
         int seed = 0x1234ABCD;
 
-        ByteOrder byteOrder = buffer.order();
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        ByteOrder byteOrder = bytebuffer.order();
+        bytebuffer.order(ByteOrder.LITTLE_ENDIAN);
 
-        long m = 0xc6a4a7935bd1e995L;
-        int r = 47;
+        long n = 0xc6a4a7935bd1e995L;
+        int s = 47;
 
-        long h = seed ^ (buffer.remaining() * m);
+        long l = seed ^ (bytebuffer.remaining() * n);
 
-        long k;
-        while (buffer.remaining() >= 8) {
-            k = buffer.getLong();
+        long i;
+        while (bytebuffer.remaining() >= 8) {
+            i = bytebuffer.getLong();
 
-            k *= m;
-            k ^= k >>> r;
-            k *= m;
+            i *= n;
+            i ^= i >>> s;
+            i *= n;
 
-            h ^= k;
-            h *= m;
+            l ^= i;
+            l *= n;
         }
 
-        if (buffer.remaining() > 0) {
+        if (bytebuffer.remaining() > 0) {
             ByteBuffer finish = ByteBuffer.allocate(8).order(
                     ByteOrder.LITTLE_ENDIAN);
-            finish.put(buffer).rewind();
-            h ^= finish.getLong();
-            h *= m;
+            finish.put(bytebuffer).rewind();
+            l ^= finish.getLong();
+            l *= n;
         }
 
-        h ^= h >>> r;
-        h *= m;
-        h ^= h >>> r;
+        l ^= l >>> s;
+        l *= n;
+        l ^= l >>> s;
 
-        buffer.order(byteOrder);
-        return h;
+        bytebuffer.order(byteOrder);
+        return l;
     }
 
     /**
@@ -73,9 +71,9 @@ public class MurmurHash implements HashingAlgorithm {
     }
 
     /**
-     * Gets unsigned long integer hash value
-     * @param key
-     * @return
+     * Gets the unsigned long integer hash value
+     * @param transactionId the original value
+     * @return hash value
      */
 	@Override
 	public long hash(String transactionId) {		

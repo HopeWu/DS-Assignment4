@@ -29,9 +29,11 @@ public class ClassicHashExperiment {
 //		
 //		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
 
+
 		start = System.currentTimeMillis();
 		Transaction[] data = Dataset.generate(datasize);
 		end = System.currentTimeMillis();
+
 		
 		System.out.println((end-start)/datasize);
 
@@ -40,6 +42,7 @@ public class ClassicHashExperiment {
 //		Database dbFull = new Database(classicHashTableFull);
 //		Database dbDouble = new Database(classicHashTableDoubleFull);
 
+
 		dbHalf.save(data);
 //		dbFull.save(data);
 //		dbDouble.save(data);
@@ -47,18 +50,20 @@ public class ClassicHashExperiment {
 		Random ran = new Random();
 
 		start = System.currentTimeMillis();
-		System.out.println(start);
 
 		for (int i = 0; i < datasize; ++i) {
+
 			int index = ran.nextInt(datasize);
 			System.out.println(dbHalf.lookup(data[index].getTransactionId()));
 			;
+
 		}
 		dbHalf.lookup(data[0].getTransactionId());
 
 		end = System.currentTimeMillis();
 		System.out.println(end);
 		System.out.println(end - start);
+
 	}
 
 	/**

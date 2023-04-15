@@ -8,15 +8,35 @@ import hashingAlgorithms.HashingAlgorithm;
 import hashingAlgorithms.MurmurHash;
 import hashingAlgorithms.SimpleHash;
 
+/**
+ * A class runing all hash function-related experiments
+ * @author Yan
+ *
+ */
 public class HashTest {
-    public static void main(String[] args){
-    	testHashTime(100000);   	 
+	
+	public static void main(String[] args) {		
+		run();
+	}
+	
+    public static void run(){
+    	testHashTime(100000); 
+    	testHashTime(1000000); 
+    	testHashTime(10000000); 
     	testCollisions(100000);
     	testCollisions(1000000);
     	testCollisions(10000000);
-    	testDispersion(); 
+//    	testDispersion(); 
+//    	System.out.println(collisionRN(10000000, Math.pow(2, 32)) );// 11632.50
+//    	System.out.println(collisionRN(10000000, Math.pow(2, 64)) );// 1.0000384E7
     }
-	private static void testHashTime(int size) {
+    
+    /**
+     * Tests the performance of hash functions in terms of execution time
+     * @param size the data size
+     */
+    public static void testHashTime(int size) {
+		System.out.println("size: " + String.valueOf(size));
 		String[] strs = new String[size];
         for (int i = 0; i < size; i++) {
         	strs[i] = UUID.randomUUID().toString();
@@ -44,12 +64,12 @@ public class HashTest {
 	}
 	
 	/**
-	 * 
+	 * Tests the performance of a single hash function in terms of execution time
 	 * @param algorithm hash algorithms to be tested, call the built-in hashCode function in Java if null
-	 * @param strs
-	 * @return
+	 * @param strs an array of strings
+	 * @return execution time
 	 */
-	private static long hashTime(HashingAlgorithm algorithm, String[] strs) {
+    private static long hashTime(HashingAlgorithm algorithm, String[] strs) {
 	    long startTime = System.currentTimeMillis();
 	    for (String str : strs) {
 	    	if (algorithm == null) {
@@ -62,7 +82,11 @@ public class HashTest {
 	    return endTime - startTime;
 	}
 	
-	private static void testCollisions(int size) {
+    /**
+     * Tests the performance of hash functions in terms of the collision rate
+     * @param size the data size
+     */
+    public static void testCollisions(int size) {
         // built-in hashCode in Java
         System.out.println("*****************Java hashCode*****************");
         testCollision(null, size);
@@ -84,7 +108,12 @@ public class HashTest {
 		testCollision(murmurHash, size);
 	}
 	
-	private static void testCollision(HashingAlgorithm algorithm, int size) {
+    /**
+     * Tests the performance of a single hash function in terms of the collision rate
+     * @param algorithm algorithm hash algorithms to be tested, call the built-in hashCode function in Java if null
+     * @param size the data size
+     */
+    private static void testCollision(HashingAlgorithm algorithm, int size) {
 		Set<String> strs = new HashSet<>();
         for (int i = 0; i < size; i++){
         	strs.add(UUID.randomUUID().toString());
@@ -106,6 +135,9 @@ public class HashTest {
         System.out.println("collision rate: " + String.format("%.8f", 1.0 * (strs.size() - values.size()) / strs.size()));
 	}
 	
+    /**
+     * A helper function for testing the collision rate
+     */
     private static Map<Long, List<String>> collision(HashingAlgorithm algorithm, Set<String> originalValues) {
         Map<Long, List<String>> result = new HashMap<>();
         for (String originVal : originalValues) {
@@ -122,7 +154,7 @@ public class HashTest {
         return result;
     }    
     
-    private static void testDispersion() {
+    public static void testDispersion() {
         ArrayList<String> tranIds = new ArrayList<>();
 		Transaction[] data = Dataset.generate(100);
 		for(Transaction tran: data) {
@@ -149,7 +181,7 @@ public class HashTest {
         testSingleDispersion(murmurHash, tranIds);
 	}
     
-    private static void testSingleDispersion(HashingAlgorithm algorithm, ArrayList<String> tranIds) {
+    public static void testSingleDispersion(HashingAlgorithm algorithm, ArrayList<String> tranIds) {
         int[] buckets = new int[10];
         long hashVal = 0;
         for (String tran : tranIds) {
@@ -163,4 +195,14 @@ public class HashTest {
       }
       System.out.println(Arrays.toString(buckets));
 	}
+    
+    /**
+     * Estimates the number of collisions of a hash function 
+     * @param n the number of hash values
+     * @param d the maximum value d in the hash value range
+     * @return
+     */
+    public static double collisionRN(double n, double d) {
+         return n - d + d * Math.pow((d - 1) / d, n);
+    }
 }

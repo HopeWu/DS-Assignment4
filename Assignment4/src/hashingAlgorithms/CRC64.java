@@ -1,20 +1,24 @@
 package hashingAlgorithms;
 
+/**
+ * A class implementing the crc64 hash function with low collision rate
+ *
+ */
 public class CRC64 implements HashingAlgorithm {
 	
-    private static final long INITIALCRC = 0xFFFFFFFFFFFFFFFFL;
-    private static long[] crcTable = new long[256];
-    private static final long POLY64REV = 0x95AC9329AC4BC9B5L;
+    private static final long INITIAL = 0xFFFFFFFFFFFFFFFFL;
+    private static long[] table = new long[256];
+    private static final long POLY64 = 0x95AC9329AC4BC9B5L;
 
     static {
-        long part;
+        long k;
         for (int i = 0; i < 256; i++) {
-            part = i;
+            k = i;
             for (int j = 0; j < 8; j++) {
-                long x = ((int) part & 1) != 0 ? POLY64REV : 0;
-                part = (part >> 1) ^ x;
+                long m = ((int) k & 1) != 0 ? POLY64 : 0;
+                k = (k >> 1) ^ m;
             }
-            crcTable[i] = part;
+            table[i] = k;
         }
     }
 
@@ -24,9 +28,9 @@ public class CRC64 implements HashingAlgorithm {
      * @return long the calculated hash values
      */
     private long hash(byte[] key) {
-        long crc = INITIALCRC;
-        for (int k = 0, n = key.length; k < n; ++k) {
-            crc = crcTable[(((int) crc) ^ key[k]) & 0xff] ^ (crc >> 8);
+        long crc = INITIAL;
+        for (int i = 0, n = key.length; i < n; i++) {
+            crc = table[(((int) crc) ^ key[i]) & 0xff] ^ (crc >> 8);
         }
         return crc;
     }
@@ -44,9 +48,9 @@ public class CRC64 implements HashingAlgorithm {
     }
 
     /**
-     * Gets unsigned long integer hash value
-     * @param key
-     * @return
+     * Gets the unsigned long integer hash value
+     * @param transactionId the original value
+     * @return hash value
      */
 	@Override
 	public long hash(String transactionId) {
