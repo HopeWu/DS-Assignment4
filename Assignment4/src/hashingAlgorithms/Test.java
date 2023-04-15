@@ -2,15 +2,15 @@ package hashingAlgorithms;
 
 import java.util.UUID;
 
-public class HashTest {
+public class Test {
     public static void main(String[] args) {
     	System.out.println("--------JDK hashCode--------------");
         System.out.println("0".hashCode());
         System.out.println("1".hashCode());
         System.out.println("2".hashCode());
-        System.out.println("5729674");
-        System.out.println("5729675");
-        System.out.println("5729676");
+        System.out.println("5729674".hashCode());
+        System.out.println("5729675".hashCode());
+        System.out.println("5729676".hashCode());
         
         System.out.println("---------MurmurHash-------------");
         MurmurHash murmurHash = new MurmurHash();
@@ -38,7 +38,8 @@ public class HashTest {
         System.out.println(simpleHash.hash("5729674"));
         System.out.println(simpleHash.hash("5729675"));
         System.out.println(simpleHash.hash("5729676"));
-
+        
+        
         long startTime1 = System.currentTimeMillis();
         for (int i = 0; i < 100000; i++) {
             String randomString = UUID.randomUUID().toString();
