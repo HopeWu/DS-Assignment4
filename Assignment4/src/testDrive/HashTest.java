@@ -9,6 +9,10 @@ import hashingAlgorithms.MurmurHash;
 import hashingAlgorithms.SimpleHash;
 
 public class HashTest {
+	
+	public static void main(String[] args) {		
+		run();
+	}
     public static void run(){
     	testHashTime(100000); 
     	testHashTime(1000000); 

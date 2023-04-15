@@ -14,7 +14,7 @@ public abstract class HashTable {
 	public Transaction get(String transactionId) {
 		int bucketIndex = hash(transactionId);
 		
-		return retrieveFromBucket(bucketIndex);
+		return retrieveFromBucket(bucketIndex, transactionId);
 	}
 	
 	/**
@@ -24,7 +24,7 @@ public abstract class HashTable {
 	 * 		  the hash function.
 	 * @return - Transaction data stored in the given hashed index.
 	 */
-	protected abstract Transaction retrieveFromBucket(int bucketIndex);
+	protected abstract Transaction retrieveFromBucket(int bucketIndex, String transactionId);
 
 	/**
 	 * Equivalent to the put operation in HashMap.
@@ -60,14 +60,22 @@ public abstract class HashTable {
 	 * @return hash index of the corresponding transaciton id.
 	 */
 	public int hash(String transactionId){
-		return (int) (hashingAlgorithm.hash(transactionId) & Integer.MAX_VALUE) % this.length;
+		return (int) (hashingAlgorithm.hash(transactionId) & Integer.MAX_VALUE) % this.bucketLength;
 	}
 	
 	/**
 	 * The length of the underlying array(buckets).
 	 */
-	int length;
+	int bucketLength;
 	
+	public int getBucketLength() {
+		return bucketLength;
+	}
+
+	public void setBucketLength(int bucketLength) {
+		this.bucketLength = bucketLength;
+	}
+
 	/**
 	 * The algorithm used for hashing the transaction id into the index of the array.
 	 */

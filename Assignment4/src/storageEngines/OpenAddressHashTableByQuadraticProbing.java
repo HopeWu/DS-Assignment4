@@ -15,7 +15,7 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
     
 	public OpenAddressHashTableByQuadraticProbing(){
 		super.hashingAlgorithm = new CRC64();
-		this.length = INITIAL_CAPACITY;
+		this.bucketLength = INITIAL_CAPACITY;
 		this.table = new Transaction[INITIAL_CAPACITY];
 	}
 	
@@ -25,7 +25,7 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
      */
     public OpenAddressHashTableByQuadraticProbing(HashingAlgorithm hashingAlgorithm, float factor) {
         super();
-        this.length = INITIAL_CAPACITY;
+        this.bucketLength = INITIAL_CAPACITY;
         this.hashingAlgorithm = hashingAlgorithm;
         this.table = new Transaction[INITIAL_CAPACITY];
         OpenAddressHashTableByQuadraticProbing.LOAD_FACTOR=factor;
@@ -37,12 +37,12 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
      * @return the found transaction, or null if not found
      */
     @Override
-    protected Transaction retrieveFromBucket(int bucketIndex) {
+    protected Transaction retrieveFromBucket(int bucketIndex, String transactionId) {
         int i = 0;
         int index;
         int targetHash = hash(table[bucketIndex].getTransactionId());
         do {
-            index = (bucketIndex + i * i) % length;
+            index = (bucketIndex + i * i) % bucketLength;
             if (table[index] == null) {
                 return null;
             }
@@ -50,7 +50,7 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
                 return table[index];
             }
             i++;
-        } while (i < length);
+        } while (i < bucketLength);
 
         return null;
     }
@@ -65,20 +65,20 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
         int i = 0;
         int index;
         do {
-            index = (bucketIndex + i * i) % length;
+            index = (bucketIndex + i * i) % bucketLength;
             if (table[index] == null) {
                 table[index] = tran;
                 size++; // Increment the size counter when adding a new element
 
                 // Check if resizing is needed
-                if (1.0 * size / length > LOAD_FACTOR) {
+                if (1.0 * size / bucketLength > LOAD_FACTOR) {
                     resize();
                 }
 
                 return;
             }
             i++;
-        } while (i < length);
+        } while (i < bucketLength);
     }
     
     /**
@@ -87,7 +87,7 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
      * into the new table using quadratic probing.
      */
     private void resize() {
-        int newLength = length * 2;
+        int newLength = bucketLength * 2;
         Transaction[] newTable = new Transaction[newLength];
         for (Transaction transaction : table) {
             if (transaction != null) {
@@ -105,7 +105,7 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
             }
         }
         table = newTable;
-        length = newLength;
+        bucketLength = newLength;
     }
 
     /**

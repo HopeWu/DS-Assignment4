@@ -1,7 +1,6 @@
 package storageEngines;
 
 import dataset.Transaction;
-import hashingAlgorithms.CRC64;
 import hashingAlgorithms.HashingAlgorithm;
 
 /**
@@ -10,28 +9,18 @@ import hashingAlgorithms.HashingAlgorithm;
  *
  */
 public class ClassicHashTable extends HashTable {
-	
-	/**
-	 * Default Constructor: Initializes the member variables
-	 * of super class and the current class.
-	 * 
-	 */
-	public ClassicHashTable(){
-		super.hashingAlgorithm = new CRC64();
-		this.length = DEFAULT_LENGTH;
-		chainedArray = new TransactionNode[length];
-		for(int i = 0; i < length; i++) {
-			chainedArray[i] = null;
-		}
-		size = 0;
-	}
-	
 	/**
 	 *  Constructor to set the hashingAlgorithm member variable.
 	 * @param hashingAlgorithm -  Reference of appt. hash algorithm
 	 */
-	public ClassicHashTable(HashingAlgorithm hashingAlgorithm){
+	public ClassicHashTable(HashingAlgorithm hashingAlgorithm, int bucketlength){
 		super.hashingAlgorithm = hashingAlgorithm;
+		this.bucketLength = bucketlength;
+		chainedArray = new TransactionNode[bucketLength];
+		for(int i = 0; i < bucketLength; i++) {
+			chainedArray[i] = null;
+		}
+		size = 0;			
 	}
 	
 	/**
@@ -49,20 +38,20 @@ public class ClassicHashTable extends HashTable {
 	 *  	  the hash function.
 	 */
 	@Override
-	protected Transaction retrieveFromBucket(int bucketIndex) {
+	protected Transaction retrieveFromBucket(int bucketIndex, String transactionId) {
 		if(chainedArray[bucketIndex] == null) {
 			return null;
 		}
 		else {
 			TransactionNode list = chainedArray[bucketIndex];
-			while(list.getNext() != null) {
-				if(list.getData() == null) {
-					return null;
+			while(list != null) {
+				if(list.getData().getTransactionId() == transactionId) {
+					return list.getData();
 				}
 				
-				list.setNext(list.getNext());
+				list = list.getNext();
 			}
-			return list.getData();
+			return null;
 		}
 	}
 
@@ -84,26 +73,30 @@ public class ClassicHashTable extends HashTable {
 		}
 		else {
 			TransactionNode list = chainedArray[bucketIndex];
-			boolean found = false;
 			while(list.getNext() != null) {
-				if(list.getData() == tran) {
-					list.setData(tran);
-					found = true;
-					break;
-				}
-				
 				list.setNext(list.getNext());
 			}
 			
-			if(!found) {
+			if(list != null) {
 				TransactionNode newNode = new TransactionNode(tran, null);
 				list.setNext(newNode);
 			}
 		}
 		++size;
 	}
+	@Override
+	public void setBucketLength(int bucketLength) {
+		this.bucketLength = bucketLength; 	
+		// reassign the chainedArray
+		chainedArray = new TransactionNode[bucketLength];
+	}
 	
+	/**
+	 * The buckets. Each contains a linked list for the collided items who have been assigned into the this bucket.
+	 */
 	private TransactionNode[] chainedArray;
+	/**
+	 * The size of this hash table, i.e. how many items are there in this hash table.
+	 */
 	private int size;
-    private static final int DEFAULT_LENGTH = 16;
 }

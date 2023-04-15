@@ -18,11 +18,6 @@ public class Database {
 		this.hashTable = hashTable;
 	}
 	
-	public Database() {
-		super();
-		this.hashTable = new ClassicHashTable();
-	}
-	
 	/**
 	 * To save a bunch of transactions into the database.
 	 * @param transactions
