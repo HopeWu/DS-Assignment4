@@ -1,7 +1,6 @@
 package storageEngines;
 
 import dataset.Transaction;
-import hashingAlgorithms.CRC64;
 import hashingAlgorithms.HashingAlgorithm;
 
 /**
@@ -10,29 +9,18 @@ import hashingAlgorithms.HashingAlgorithm;
  *
  */
 public class ClassicHashTable extends HashTable {
-	
-	/**
-	 * Default Constructor: Initializes the member variables
-	 * of super class and the current class.
-	 * 
-	 */
-	public ClassicHashTable(){
-		super.hashingAlgorithm = new CRC64();
-		this.bucketLength = DEFAULT_LENGTH;
-		chainedArray = new TransactionNode[bucketLength];
-		for(int i = 0; i < bucketLength; i++) {
-			chainedArray[i] = null;
-		}
-		size = 0;
-	}
-	
 	/**
 	 *  Constructor to set the hashingAlgorithm member variable.
 	 * @param hashingAlgorithm -  Reference of appt. hash algorithm
 	 */
-	public ClassicHashTable(HashingAlgorithm hashingAlgorithm){
-		this();
+	public ClassicHashTable(HashingAlgorithm hashingAlgorithm, int bucketlength){
 		super.hashingAlgorithm = hashingAlgorithm;
+		this.bucketLength = bucketlength;
+		chainedArray = new TransactionNode[bucketLength];
+		for(int i = 0; i < bucketLength; i++) {
+			chainedArray[i] = null;
+		}
+		size = 0;			
 	}
 	
 	/**
@@ -85,18 +73,11 @@ public class ClassicHashTable extends HashTable {
 		}
 		else {
 			TransactionNode list = chainedArray[bucketIndex];
-			boolean found = false;
 			while(list.getNext() != null) {
-				if(list.getData().getTransactionId() == tran.getTransactionId()) {
-					list.setData(tran);
-					found = true;
-					break;
-				}
-				
 				list.setNext(list.getNext());
 			}
 			
-			if(!found) {
+			if(list != null) {
 				TransactionNode newNode = new TransactionNode(tran, null);
 				list.setNext(newNode);
 			}
@@ -118,8 +99,4 @@ public class ClassicHashTable extends HashTable {
 	 * The size of this hash table, i.e. how many items are there in this hash table.
 	 */
 	private int size;
-	/**
-	 * The default length of the bucket in use.
-	 */
-    private static final int DEFAULT_LENGTH = 16;
 }

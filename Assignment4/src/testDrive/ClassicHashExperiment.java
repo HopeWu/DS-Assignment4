@@ -19,35 +19,33 @@ public class ClassicHashExperiment {
 	public static void main(String[] args) {
 		int datasize = 10;
 		
-		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm());
-		classicHashTableHalfSize.setBucketLength(datasize/2);
+		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize/2);
 		
-//		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-//		classicHashTableFull.setBucketLength(datasize);
-//		
-//		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-//		classicHashTableDoubleFull.setBucketLength(2*datasize);
+		//HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
 		
-		Transaction[] data = Dataset.generate(datasize);
+		//HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
 		
+		Transaction[] data = Dataset.generate(datasize/2);
+		
+		System.out.println("Reached line 30");
 		Database dbHalf = new Database(classicHashTableHalfSize);
-//		Database dbFull = new Database(classicHashTableFull);
-//		Database dbDouble = new Database(classicHashTableDoubleFull);
+		//Database dbFull = new Database(classicHashTableFull);
+		//Database dbDouble = new Database(classicHashTableDoubleFull);
 		
 		dbHalf.save(data);
-//		dbFull.save(data);
-//		dbDouble.save(data);
+		//dbFull.save(data);
+		//dbDouble.save(data);
+		System.out.println("Reached line 38");
 
 		long start, end;
 		
 		Random ran = new Random();
 		
 		start = System.currentTimeMillis();
-//		for ( int i = 0; i < datasize/10; ++i) {
-//			int index = ran.nextInt(datasize);
-//			dbHalf.lookup(data[index].getTransactionId());
-//		}
-		dbHalf.lookup(data[0].getTransactionId());
+		for ( int i = 0; i < data.length; ++i) {
+			int index = ran.nextInt(datasize/2);
+			dbHalf.lookup(data[index].getTransactionId());
+		}
 		end = System.currentTimeMillis();
 		System.out.println(end-start);
 	}
