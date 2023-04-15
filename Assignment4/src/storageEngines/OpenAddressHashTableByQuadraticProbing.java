@@ -40,20 +40,25 @@ public class OpenAddressHashTableByQuadraticProbing extends HashTable{
     protected Transaction retrieveFromBucket(int bucketIndex, String transactionId) {
         int i = 0;
         int index;
-        int targetHash = hash(table[bucketIndex].getTransactionId());
+        int targetHash = transactionId.hashCode();
+        
         do {
             index = (bucketIndex + i * i) % bucketLength;
+            
             if (table[index] == null) {
                 return null;
             }
+            
             if (hash(table[index].getTransactionId()) == targetHash) {
                 return table[index];
             }
+            
             i++;
         } while (i < bucketLength);
 
         return null;
     }
+
 
     /**
      * Put the transaction into the table using quadratic probing.

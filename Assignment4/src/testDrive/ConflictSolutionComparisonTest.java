@@ -1,15 +1,16 @@
 package testDrive;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import dataset.Dataset;
 import dataset.Transaction;
 import hashingAlgorithms.*;
 import hashingAlgorithms.HashingAlgorithm;
 import storageEngines.*;
 
-/**
- * This test class compares the performance of OpenAddressHashTable and
- * QuadraticProbingHashTable with different load factors.
- */
+
 public class ConflictSolutionComparisonTest {
 
     private static final int STEP_COUNT = 10;
@@ -19,7 +20,12 @@ public class ConflictSolutionComparisonTest {
     private static final int INITIAL_DATA_SIZE = 1000;
     private static final int DATA_SIZE_STEP = 1000;
     private static final Transaction[] data = Dataset.generate(10000);
+    //    private static final Transaction[] data = readTransactionsFromFile("transactions.dat");
 
+    /**
+     * This test class compares the performance of OpenAddressHashTable and
+     * QuadraticProbingHashTable with different load factors.
+     */
     public static void LoadFactorComparison(HashingAlgorithm hash) {
         
         // Instantiate a custom hashing algorithm, e.g., CRC32
@@ -60,7 +66,7 @@ public class ConflictSolutionComparisonTest {
             double linearAverageTime = linearTime / RUNS;
             double quadraticAverageTime = quadraticTime / RUNS;
 
-            System.out.println("OpenAddressHashTable average time: " + linearAverageTime + " ms");
+            System.out.println("LinearProbingHashTable average time: " + linearAverageTime + " ms");
             System.out.println("QuadraticProbingHashTable average time: " + quadraticAverageTime + " ms");
 
             System.out.println("------------------------------");
@@ -108,14 +114,70 @@ public class ConflictSolutionComparisonTest {
             double openAddressAverageTime = linearTime / RUNS;
             double quadraticProbingAverageTime = quadraticTime / RUNS;
 
-            System.out.println("OpenAddressHashTable average time: " + openAddressAverageTime + " ms");
+            System.out.println("LinearProbingHashTable average time: " + openAddressAverageTime + " ms");
             System.out.println("QuadraticProbingHashTable average time: " + quadraticProbingAverageTime + " ms");
 
             System.out.println("------------------------------");
         }
     }
+    
+    public static void QuadraticProbingVsSeparateChaining(HashingAlgorithm hash) {
+        // Instantiate a custom hashing algorithm, e.g., CRC32
+        HashingAlgorithm hashingAlgorithm = hash;
+
+        for (int i = 0; i < STEP_COUNT; i++) {
+            int currentDataSize = INITIAL_DATA_SIZE + i * DATA_SIZE_STEP;
+            System.out.println("Testing with data size: " + currentDataSize);
+
+            long totalQuadraticProbingInsertionTime = 0;
+            long totalClassicHashTableInsertionTime = 0;
+            long totalQuadraticProbingSearchTime = 0;
+            long totalClassicHashTableSearchTime = 0;
+
+            for (int run = 0; run < 3; run++) {
+                OpenAddressHashTableByQuadraticProbing quadraticProbingHashTable = new OpenAddressHashTableByQuadraticProbing(hashingAlgorithm, 0.6f);
+                ClassicHashTable classicHashTable = new ClassicHashTable(hashingAlgorithm, 16);
+
+                totalQuadraticProbingInsertionTime += testInsertion(quadraticProbingHashTable, data, currentDataSize);
+                totalClassicHashTableInsertionTime += testInsertion(classicHashTable, data, currentDataSize);
+
+                totalQuadraticProbingSearchTime += testSearch(quadraticProbingHashTable, data, currentDataSize);
+                totalClassicHashTableSearchTime += testSearch(classicHashTable, data, currentDataSize);
+                }
+            System.out.println("Quadratic Probing Hash conflict solution - Average insertion time: " + (totalQuadraticProbingInsertionTime / 3.0) + " ms, Average search time: " + (totalQuadraticProbingSearchTime / 3.0) + " ms");
+            System.out.println("Classic Hash Table - Average insertion time: " + (totalClassicHashTableInsertionTime / 3.0) + " ms, Average search time: " + (totalClassicHashTableSearchTime / 3.0) + " ms");
+
+            }
+     }
+
+
+    private static long testInsertion(HashTable hashTable, Transaction[] transactions, int dataSize) {
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < dataSize; i++) {
+            hashTable.put(data[i].getTransactionId(), data[i]);
+        }
+
+        return (System.nanoTime() - startTime) / 1_000_000; // Convert to milliseconds
+    }
+
+    private static long testSearch(HashTable hashTable, Transaction[] transactions, int dataSize) {
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i < dataSize; i++) {
+            hashTable.get(transactions[i].getTransactionId());
+        }
+
+        return (System.nanoTime() - startTime) / 1_000_000; // Convert to milliseconds
+    }
+
+
+
+    
 	public static void main(String[] args) {
-		LoadFactorComparison(new CRC64());
-		DataSizeComparison(new CRC64());
+		HashingAlgorithm hashingAlgorithm = new CRC64();
+        // LoadFactorComparison(hashingAlgorithm);
+        // DataSizeComparison(hashingAlgorithm);
+        QuadraticProbingVsSeparateChaining(hashingAlgorithm);
 	}
 }
