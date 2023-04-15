@@ -20,32 +20,31 @@ import storageEngines.HashTable;
 public class ClassicHashExperiment {
 	public static void main(String[] args) {
 		long start, end;
-		int datasize = 10000;
+		int datasize = 1000;
 
 		System.out.println(System.currentTimeMillis());
 		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize / 2);
 
-//		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
-//		
-//		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
-
-
-		start = System.currentTimeMillis();
-		Transaction[] data = Dataset.generate(datasize);
-		end = System.currentTimeMillis();
-
+		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), datasize);
 		
-		System.out.println((end-start)/datasize);
+		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm(), 2*datasize);
+
+		System.out.println(System.currentTimeMillis());
+		Transaction[] data = Dataset.generate(datasize);
+		System.out.println(System.currentTimeMillis());
 
 		Database dbHalf = new Database(classicHashTableHalfSize);
-		System.out.println(System.currentTimeMillis());
-//		Database dbFull = new Database(classicHashTableFull);
-//		Database dbDouble = new Database(classicHashTableDoubleFull);
+		Database dbFull = new Database(classicHashTableFull);
+		Database dbDouble = new Database(classicHashTableDoubleFull);
 
 
+		
 		dbHalf.save(data);
-//		dbFull.save(data);
-//		dbDouble.save(data);
+		System.out.println(System.currentTimeMillis());
+		dbFull.save(data);
+		System.out.println(System.currentTimeMillis());
+		dbDouble.save(data);
+		System.out.println(System.currentTimeMillis());
 
 		Random ran = new Random();
 
