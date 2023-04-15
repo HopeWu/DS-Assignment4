@@ -56,7 +56,8 @@ public class Dataset {
 	}
 
 	public static void main(String[] args) {
-		Transaction[] data = Dataset.generate(10);
+		//		Transaction[] data = Dataset.generate(datasize);
+		Transaction[] data = Dataset.generate(100);
 		for(Transaction tran: data) {
 			System.out.println(tran);
 		}

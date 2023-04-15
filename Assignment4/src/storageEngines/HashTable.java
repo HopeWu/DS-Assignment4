@@ -60,6 +60,7 @@ public abstract class HashTable {
 	 * @return hash index of the corresponding transaciton id.
 	 */
 	public int hash(String transactionId){
+//		return (int) (hashingAlgorithm.hash(transactionId)) % this.bucketLength;
 		return (int) (hashingAlgorithm.hash(transactionId) & Integer.MAX_VALUE) % this.bucketLength;
 	}
 	
