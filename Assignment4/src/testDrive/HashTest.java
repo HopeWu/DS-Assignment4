@@ -8,11 +8,17 @@ import hashingAlgorithms.HashingAlgorithm;
 import hashingAlgorithms.MurmurHash;
 import hashingAlgorithms.SimpleHash;
 
+/**
+ * A class runing all hash function-related experiments
+ * @author Yan
+ *
+ */
 public class HashTest {
 	
 	public static void main(String[] args) {		
 		run();
 	}
+	
     public static void run(){
     	testHashTime(100000); 
     	testHashTime(1000000); 
@@ -25,6 +31,10 @@ public class HashTest {
 //    	System.out.println(collisionRN(10000000, Math.pow(2, 64)) );// 1.0000384E7
     }
     
+    /**
+     * Tests the performance of hash functions in terms of execution time
+     * @param size the data size
+     */
     public static void testHashTime(int size) {
 		System.out.println("size: " + String.valueOf(size));
 		String[] strs = new String[size];
@@ -54,12 +64,12 @@ public class HashTest {
 	}
 	
 	/**
-	 * 
+	 * Tests the performance of a single hash function in terms of execution time
 	 * @param algorithm hash algorithms to be tested, call the built-in hashCode function in Java if null
-	 * @param strs
-	 * @return
+	 * @param strs an array of strings
+	 * @return execution time
 	 */
-    public static long hashTime(HashingAlgorithm algorithm, String[] strs) {
+    private static long hashTime(HashingAlgorithm algorithm, String[] strs) {
 	    long startTime = System.currentTimeMillis();
 	    for (String str : strs) {
 	    	if (algorithm == null) {
@@ -72,6 +82,10 @@ public class HashTest {
 	    return endTime - startTime;
 	}
 	
+    /**
+     * Tests the performance of hash functions in terms of the collision rate
+     * @param size the data size
+     */
     public static void testCollisions(int size) {
         // built-in hashCode in Java
         System.out.println("*****************Java hashCode*****************");
@@ -94,7 +108,12 @@ public class HashTest {
 		testCollision(murmurHash, size);
 	}
 	
-    public static void testCollision(HashingAlgorithm algorithm, int size) {
+    /**
+     * Tests the performance of a single hash function in terms of the collision rate
+     * @param algorithm algorithm hash algorithms to be tested, call the built-in hashCode function in Java if null
+     * @param size the data size
+     */
+    private static void testCollision(HashingAlgorithm algorithm, int size) {
 		Set<String> strs = new HashSet<>();
         for (int i = 0; i < size; i++){
         	strs.add(UUID.randomUUID().toString());
@@ -116,7 +135,10 @@ public class HashTest {
         System.out.println("collision rate: " + String.format("%.8f", 1.0 * (strs.size() - values.size()) / strs.size()));
 	}
 	
-    public static Map<Long, List<String>> collision(HashingAlgorithm algorithm, Set<String> originalValues) {
+    /**
+     * A helper function for testing the collision rate
+     */
+    private static Map<Long, List<String>> collision(HashingAlgorithm algorithm, Set<String> originalValues) {
         Map<Long, List<String>> result = new HashMap<>();
         for (String originVal : originalValues) {
         	long hashVal = 0;
