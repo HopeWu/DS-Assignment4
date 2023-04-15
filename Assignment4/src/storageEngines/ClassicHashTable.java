@@ -105,7 +105,7 @@ public class ClassicHashTable extends HashTable {
 	}
 	@Override
 	public void setBucketLength(int bucketLength) {
-		this.bucketLength = bucketLength;
+		this.bucketLength = bucketLength; 	
 		// reassign the chainedArray
 		chainedArray = new TransactionNode[bucketLength];
 	}
