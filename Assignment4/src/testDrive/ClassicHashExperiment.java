@@ -22,31 +22,31 @@ public class ClassicHashExperiment {
 		HashTable classicHashTableHalfSize = new ClassicHashTable(new JavaHashcodeAlgorithm());
 		classicHashTableHalfSize.setBucketLength(datasize/2);
 		
-//		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-//		classicHashTableFull.setBucketLength(datasize);
-//		
-//		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
-//		classicHashTableDoubleFull.setBucketLength(2*datasize);
+		HashTable classicHashTableFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
+		classicHashTableFull.setBucketLength(datasize);
+		
+		HashTable classicHashTableDoubleFull = new ClassicHashTable(new JavaHashcodeAlgorithm());
+		classicHashTableDoubleFull.setBucketLength(2*datasize);
 		
 		Transaction[] data = Dataset.generate(datasize);
 		
 		Database dbHalf = new Database(classicHashTableHalfSize);
-//		Database dbFull = new Database(classicHashTableFull);
-//		Database dbDouble = new Database(classicHashTableDoubleFull);
+		Database dbFull = new Database(classicHashTableFull);
+		Database dbDouble = new Database(classicHashTableDoubleFull);
 		
 		dbHalf.save(data);
-//		dbFull.save(data);
-//		dbDouble.save(data);
+		dbFull.save(data);
+		dbDouble.save(data);
 
 		long start, end;
 		
 		Random ran = new Random();
 		
 		start = System.currentTimeMillis();
-//		for ( int i = 0; i < datasize/10; ++i) {
-//			int index = ran.nextInt(datasize);
-//			dbHalf.lookup(data[index].getTransactionId());
-//		}
+		for ( int i = 0; i < datasize/10; ++i) {
+			int index = ran.nextInt(datasize);
+			dbHalf.lookup(data[index].getTransactionId());
+		}
 		dbHalf.lookup(data[0].getTransactionId());
 		end = System.currentTimeMillis();
 		System.out.println(end-start);
