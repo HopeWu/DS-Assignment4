@@ -18,8 +18,8 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
     
 	public OpenAddressHashTableByLinearProbing(){
 		super.hashingAlgorithm = new CRC64();
-		this.length = DEFAULT_LENGTH;
-        this.table = new Transaction[length];
+		this.bucketLength = DEFAULT_LENGTH;
+        this.table = new Transaction[bucketLength];
         this.size = 0;
 	}
 	
@@ -29,9 +29,9 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
      * @param hashingAlgorithm the hashing algorithm to use for converting transaction IDs into bucket indices
      */
     public OpenAddressHashTableByLinearProbing(HashingAlgorithm hashingAlgorithm,float factor) {
-        this.length = DEFAULT_LENGTH;
+        this.bucketLength = DEFAULT_LENGTH;
         super.hashingAlgorithm = hashingAlgorithm;
-        this.table = new Transaction[length];
+        this.table = new Transaction[bucketLength];
         this.size = 0;
         OpenAddressHashTableByLinearProbing.LOAD_FACTOR=factor;
     }
@@ -42,8 +42,8 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
      * @return the found transaction, or null if not found
      */
     @Override
-    protected Transaction retrieveFromBucket(int bucketIndex) {
-        for (int i = bucketIndex; i < length; i = (i + 1) % length) {
+    protected Transaction retrieveFromBucket(int bucketIndex, String transactionId) {
+        for (int i = bucketIndex; i < bucketLength; i = (i + 1) % bucketLength) {
             if (table[i] == null) {
             	System.out.println("Not found");
                 return null;
@@ -62,10 +62,10 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
      */
     @Override
     protected void putIntoBucket(int bucketIndex, Transaction tran) {
-        if (size + 1 > length * LOAD_FACTOR) {
+        if (size + 1 > bucketLength * LOAD_FACTOR) {
             resize();
         }
-        for (int i = bucketIndex; i < length; i = (i + 1) % length) {
+        for (int i = bucketIndex; i < bucketLength; i = (i + 1) % bucketLength) {
             if (table[i] == null || table[i].getTransactionId().equals(tran.getTransactionId())) {
                 table[i] = tran;
                 size++;
@@ -87,9 +87,9 @@ public class OpenAddressHashTableByLinearProbing extends HashTable {
      * Resize the hash table by doubling its length and rehashing all transactions.
      */
     private void resize() {
-        length *= 2;
+        bucketLength *= 2;
         Transaction[] oldTable = table;
-        table = new Transaction[length];
+        table = new Transaction[bucketLength];
         size = 0;
 
         for (Transaction transaction : oldTable) {
