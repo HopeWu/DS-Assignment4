@@ -12,11 +12,17 @@ import com.github.javafaker.Faker;
  *
  */
 public class Dataset {
+	static long now = System.currentTimeMillis();
 
 	/**
 	 * To create random number to make fake data.
 	 */
 	static Random rand = new Random();
+	
+	/**
+	 * The size of the dataset
+	 */
+	static int datasize = 0;
 	
 	/**
 	 * No need to create an instance of this.
@@ -26,6 +32,7 @@ public class Dataset {
 
 	public static Transaction[] generate(int size) {
 		Transaction[] transactions = new Transaction[size];
+		datasize = size;
 		for(int i = 0; i < transactions.length; ++i) {
 			transactions[i] = Dataset.randomOneTransaction();
 		}
@@ -37,22 +44,20 @@ public class Dataset {
 	 * @return generated Transaction instance.
 	 */
 	private static Transaction randomOneTransaction() {
-		// for generating faking data
-		Faker faker = new Faker();
 		// to generate the date of the transaction
-		Date date = faker.date().past(365*10, TimeUnit.DAYS);
+		Date date = new Date(rand.nextLong(now - 100000000000L, now));
 		// to generate the amount of the transaction
 		int amount = rand.nextInt(10000);
 		// to generate the currency for the amount
 		Currency cur = Currency.values()[rand.nextInt(4)];
-		// to generate the name of the sender
-		String senderName = faker.name().fullName();
-		// to generate the name of the recipient
-		String recipientName = faker.name().fullName();
+		// to generate the id of the sender, no specific reason for the range 
+		int senderId = rand.nextInt(datasize);
+		// to generate the id of the recipient
+		int recipientId = rand.nextInt(datasize);
 		// to generate the transactionId
 		String transactionId = String.format("T%s%d", date.getTime()/1000L, rand.nextInt(1000,10000));
 		
-		return new Transaction(transactionId, senderName, recipientName, amount, cur, date);
+		return new Transaction(transactionId, senderId, recipientId, amount, cur, date);
 	}
 
 	public static void main(String[] args) {
@@ -61,5 +66,6 @@ public class Dataset {
 		for(Transaction tran: data) {
 			System.out.println(tran);
 		}
+
 	}
 }

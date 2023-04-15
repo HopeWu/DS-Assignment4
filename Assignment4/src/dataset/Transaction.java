@@ -9,12 +9,12 @@ import java.util.Date;
  *
  */
 public class Transaction {
-	public Transaction(String transactionId, String sender, String recipient, int amount, Currency currency,
+	public Transaction(String transactionId, int sender, int recipient, int amount, Currency currency,
 			Date date) {
 		super();
 		this.transactionId = transactionId;
-		this.sender = sender;
-		this.recipient = recipient;
+		this.senderId = sender;
+		this.recipientId = recipient;
 		this.amount = amount;
 		this.currency = currency;
 		this.date = date;
@@ -26,14 +26,14 @@ public class Transaction {
 	String transactionId;
 	
 	/**
-	 * The name of the sender
+	 * The id of the sender
 	 */
-	String sender;
+	int senderId;
 	
 	/**
-	 * The name of the recipient
+	 * The id of the recipient
 	 */
-	String recipient;
+	int recipientId;
 	
 	/**
 	 * Amount of the transaction
@@ -54,12 +54,12 @@ public class Transaction {
 		return transactionId;
 	}
 
-	public String getSender() {
-		return sender;
+	public int getSender() {
+		return senderId;
 	}
 
-	public String getRecipient() {
-		return recipient;
+	public int getRecipient() {
+		return recipientId;
 	}
 
 	public int getAmount() {
@@ -76,9 +76,7 @@ public class Transaction {
 
 	@Override
 	public String toString() {
-		return "Transaction [transactionId=" + transactionId + ", sender=" + sender + ", recipient=" + recipient
+		return "Transaction [transactionId=" + transactionId + ", senderId=" + senderId + ", recipientId=" + recipientId
 				+ ", amount=" + amount + ", currency=" + currency + ", date=" + date + "]";
 	}
-	
-	
 }
