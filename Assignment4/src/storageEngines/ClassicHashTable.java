@@ -87,7 +87,7 @@ public class ClassicHashTable extends HashTable {
 			TransactionNode list = chainedArray[bucketIndex];
 			boolean found = false;
 			while(list.getNext() != null) {
-				if(list.getData() == tran) {
+				if(list.getData().getTransactionId() == tran.getTransactionId()) {
 					list.setData(tran);
 					found = true;
 					break;
